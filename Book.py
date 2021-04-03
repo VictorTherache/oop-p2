@@ -146,6 +146,3 @@ class Book(object):
                                              'http://books.toscrape.com/')
         return self.image_url
 
-# url = sys.argv[1] 
-# book = Book(url)
-# print(book.upc)
