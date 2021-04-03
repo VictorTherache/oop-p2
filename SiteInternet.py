@@ -20,28 +20,28 @@ class SiteInternet(object):
     This class can put Books info in csv's
     """
 
-    def remove_special_char(self, url):
+    def _remove_special_char(self, url):
         """
         Return a string with no special character in it
         """
         response = requests.get(url, stream = True)
         soup = BeautifulSoup(response.text, 'lxml')
         book = Book(url)
-        title = book.get_title(url)
+        title = book._get_title(url)
         no_special_char_string = [character for character in title if character.isalnum()]
         no_special_char_string = "".join(no_special_char_string)
         return no_special_char_string
 
 
-    def download_book_image(self, url):
+    def _download_book_image(self, url):
         """
         Download the books cover picture in the image_folder 
         """
         book = Book(url)
         response = requests.get(url, stream = True)
         soup = BeautifulSoup(response.text, 'lxml')
-        img_url = book.get_image_url(url)
-        title = self.remove_special_char(url)
+        img_url = book._get_image_url(url)
+        title = self._remove_special_char(url)
         if not os.path.exists('./image_folder'):
             os.mkdir('image_folder')
         if not os.path.exists(f"./image_folder/{title}.jpg"):
@@ -56,8 +56,7 @@ class SiteInternet(object):
         Writes the informations in a csv
         """
         book = Book(url)
-        print(book.title)
-        self.download_book_image(url)
+        self._download_book_image(url)
         headers = ['url', 'upc', 'title', 'price_including_taxe', 'price_excluding_taxe', 
                 'number_available', 'product_description', 'category', 'review_rating',
                 'image_url']
@@ -76,7 +75,7 @@ class SiteInternet(object):
                             'review_rating': book.rating, 
                             'image_url': book.image_url})
 
-    def get_nbr_of_pages(self, url):
+    def _get_nbr_of_pages(self, url):
         """
         Return the number of a category's pages
         """
@@ -88,7 +87,7 @@ class SiteInternet(object):
             nbr = int(nbr.text.strip()[-2:])  # Keep the integer in the string
             return nbr
 
-    def split_url(self, url): # Change the url so it can be iterated
+    def _split_url(self, url): # Change the url so it can be iterated
         """
         Return a url that can be used for iteration
         """
@@ -98,15 +97,15 @@ class SiteInternet(object):
         url = f"{url[0]}page-1.html"
         return url
 
-    def get_books_url(self, url):
+    def _get_books_url(self, url):
         """
         Return an array of all books url of a category
         """
         url_array = []
-        nbr_pages = self.get_nbr_of_pages(url) 
+        nbr_pages = self._get_nbr_of_pages(url) 
         if(nbr_pages == None):
             nbr_pages = 1
-        formatted_url = self.split_url(url)
+        formatted_url = self._split_url(url)
         formatted_url = formatted_url.split('page')
         for i in range(1, int(nbr_pages) + 1):
             if nbr_pages != 1:
@@ -123,7 +122,6 @@ class SiteInternet(object):
                     url_array.append(
                         "http://books.toscrape.com/catalogue/" 
                         + row['href'].strip('../'))
-                    print(url_array)
         return url_array
 
 
@@ -131,7 +129,7 @@ class SiteInternet(object):
         """
         Put all the books informations of a category in a csv
         """
-        books_urls = self.get_books_url(url)
+        books_urls = self._get_books_url(url)
         for url in books_urls:
             self.put_book_info_in_csv(url)
 
