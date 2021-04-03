@@ -22,18 +22,18 @@ class Book(object):
         Constructor method, called when an instance is created
         """
         self.url = url
-        self.title = self.get_title(url)
-        self.description = self.get_description(url)
-        self.category = self.get_category(url)
-        self.rating = self.get_rating(url)
-        self.price_excluding_taxe = self.get_price_excluding_taxes(url)
-        self.price_including_taxe = self.get_price_including_taxes(url)
-        self.upc = self.get_upc(url)
-        self.number_available = self.get_number_available(url)
-        self.image_url = self.get_image_url(url)
+        self.title = self._get_title(url)
+        self.description = self._get_description(url)
+        self.category = self._get_category(url)
+        self.rating = self._get_rating(url)
+        self.price_excluding_taxe = self._get_price_excluding_taxes(url)
+        self.price_including_taxe = self._get_price_including_taxes(url)
+        self.upc = self._get_upc(url)
+        self.number_available = self._get_number_available(url)
+        self.image_url = self._get_image_url(url)
 
 
-    def get_title(self, url):
+    def _get_title(self, url):
         """
         Return the title of the book
         """
@@ -44,7 +44,7 @@ class Book(object):
         return self.title.text
 
 
-    def get_description(self, url):
+    def _get_description(self, url):
         """
         Return the description of the book
         """
@@ -57,7 +57,7 @@ class Book(object):
             return "No description"
     
 
-    def get_category(self, url):
+    def _get_category(self, url):
         """
         Return an array containing the books category
         """
@@ -72,7 +72,7 @@ class Book(object):
             self.category_data.append([ele for ele in cols if ele])
         return self.category_data[2]
 
-    def get_rating(self, url):
+    def _get_rating(self, url):
         """
         Return the rating of the book
         """
@@ -83,7 +83,7 @@ class Book(object):
             class_name.extend(element["class"])
         return f"{class_name[1]} out of five"
 
-    def get_table_value(self, url):
+    def _get_table_value(self, url):
         """
         Return an array of books informations :
         upc, prices with taxes, price without taxes,
@@ -105,28 +105,28 @@ class Book(object):
         data2[3] = data2[3][1:] 
         return data2
 
-    def get_price_excluding_taxes(self, url):
+    def _get_price_excluding_taxes(self, url):
         """
         Return the price without taxes 
         """
-        price = self.get_table_value(url)
+        price = self._get_table_value(url)
         return price[2]
     
-    def get_price_including_taxes(self, url):
+    def _get_price_including_taxes(self, url):
         """
         Return the price with taxes 
         """
-        price = self.get_table_value(url)
+        price = self._get_table_value(url)
         return price[3]   
     
-    def get_number_available(self, url):
+    def _get_number_available(self, url):
         """
         Return the number of available books
         """
-        price = self.get_table_value(url)
+        price = self._get_table_value(url)
         return price[5]   
          
-    def get_upc(self, url):
+    def _get_upc(self, url):
         """
         Return the upc 
         """
@@ -134,7 +134,7 @@ class Book(object):
         return price[0]  
 
 
-    def get_image_url(self, url):
+    def _get_image_url(self, url):
         """
         Return the image url
         """
@@ -145,4 +145,3 @@ class Book(object):
         self.image_url = image_url['src'].replace('../../',
                                              'http://books.toscrape.com/')
         return self.image_url
-
