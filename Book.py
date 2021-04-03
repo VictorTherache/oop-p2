@@ -14,7 +14,7 @@ except ModuleNotFoundError as e:
 
 class Book(object):
     """
-    This class takes a book url for argument and returns some informations of that book
+    This class gets informations of a book
     """
 
     def __init__(self, url):
